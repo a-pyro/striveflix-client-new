@@ -19,6 +19,22 @@ export default class App extends Component {
     queryErrorFromApi: '',
     isLoading: false,
   };
+  fetchMovies = async () => {
+    try {
+      const apiURL = process.env.REACT_APP_API_URL;
+      console.log(apiURL);
+      const resp = await fetch(`${apiURL}/media`);
+      if (resp.ok) {
+        const body = await resp.json();
+        const movies = body.data;
+        // console.log(movies);
+        this.setState({ movies: movies });
+        // console.log(movies);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   handleInput = (e) => {
     this.setState({
@@ -78,63 +94,8 @@ export default class App extends Component {
     }
   };
 
-  componentDidMount = async () => {
-    // console.log('app mounted');
-    const apiKey = '95717d44';
-    const movies = [
-      'harry potter',
-      'the lord of the rings',
-      'breaking bad',
-      'rambo',
-    ];
-    const endpointAllData = `http://www.omdbapi.com/?apikey=${apiKey}&s=`;
-
-    try {
-      this.setState({
-        ...this.state.movies,
-        isLoading: true,
-      });
-      movies.forEach(async (movie) => {
-        const resp = await fetch(endpointAllData + movie.replaceAll(' ', '+'));
-        if (resp.ok) {
-          // console.log('resp ok');
-          const data = await resp.json();
-          // console.log(data.Search);
-          this.setState({
-            movies: [
-              ...this.state.movies,
-              data.Search.filter((film) => film.Poster !== 'N/A').reduce(
-                (acc, cv) => {
-                  if (acc.some((el) => el.imdbID === cv.imdbID)) return acc;
-                  acc.push(cv);
-                  return acc;
-                },
-                []
-              ),
-            ],
-          });
-          // console.log(this.state.movies);
-          this.setState({
-            ...this.state.movies,
-            isLoading: false,
-          });
-        } else {
-          console.log('something went wrong');
-          this.setState({
-            ...this.state.movies,
-            isLoading: false,
-            //isError : true
-          });
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      this.setState({
-        ...this.state.movies,
-        //isError : ture
-        isLoading: false,
-      });
-    }
+  componentDidMount = () => {
+    this.fetchMovies();
   };
   // Create a Route for a ShowDetail component. It should be able to receive a ID parameter from the querystring.
   render() {
@@ -157,22 +118,6 @@ export default class App extends Component {
             )}
           </Container>
 
-          {/* {this.state.isLoading ? (
-            <div className='d-flex justify-content-center align-items-center'>
-              <Spinner animation='grow' variant='light' />
-              <Spinner animation='grow' variant='light' />
-              <Spinner animation='grow' variant='light' />
-            </div>
-          ) : (
-            <div>
-              <Home
-                movies={this.state.movies}
-                queriedMovies={this.state.queriedElement}
-              />
-              <Footer />
-            </div>
-          )} */}
-
           <Route
             path='/'
             exact
@@ -185,14 +130,6 @@ export default class App extends Component {
               />
             )}
           />
-
-          {/* <Route
-            path='/reservations'
-            exact
-            render={(routerProps) => (
-              <Reservations {...routerProps} title='Stefano' />
-            )}
-          /> */}
 
           <Route
             path='/details/:id'

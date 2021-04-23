@@ -2,10 +2,11 @@ import React from 'react';
 import SingleCard from './SingleCard';
 import { v4 as uuidv4 } from 'uuid';
 
-const Rows = ({ movie }) => {
+const Rows = ({ movies }) => {
+  console.log(movies);
   return (
     <>
-      {movie.map((item) => (
+      {movies.map((item) => (
         <SingleCard key={uuidv4()} item={item} />
       ))}
     </>
