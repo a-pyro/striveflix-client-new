@@ -7,7 +7,7 @@ const Rows = ({ movies }) => {
   return (
     <>
       {movies.map((item) => (
-        <SingleCard key={uuidv4()} item={item} />
+        <SingleCard mode='display' key={uuidv4()} item={item} />
       ))}
     </>
   );

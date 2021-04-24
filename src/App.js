@@ -93,6 +93,7 @@ export default class App extends Component {
       });
     }
   };
+  addMovie = async () => {};
 
   componentDidMount = () => {
     this.fetchMovies();
@@ -124,6 +125,7 @@ export default class App extends Component {
             render={(routerProps) => (
               <Home
                 {...routerProps}
+                fetchMovies={this.state.fetchMovies}
                 title='Homepage'
                 movies={this.state.movies}
                 queriedMovies={this.state.queriedElement}
